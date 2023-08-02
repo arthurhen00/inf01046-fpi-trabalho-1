@@ -1,37 +1,34 @@
-function im_out = contrast_stretching_gray(im, a, b, param)
+function contrast_stretching_gray()
 
-    % u = valor do pixel
-    % a = limite inferior
-    % b = limite superior
-    % B = sei la
-    % Y = sei la
+    im = imread('moon.tif');
+    [sx, sy] = size(im);
 
-    im = imread('cameraman.tif');
-    a = 50;
-    b = 150;
-    param = 0.2;
-    B = 2;
-    Y = 1;
+    % Parametros
+    % a, b   -> parte alongada
+    % Va, Vb -> mapeamento
     Va = 30;
     Vb = 200;
+    a = 50;
+    b = 150;
 
-    [sx, sy] = size(im);
+    % Medidas tiradas do slide 123 (cpi-2-slides 2023.pdf)
+    % intensidade da reta
+    alpha = (Va - 0)/(a - 0);
+    beta = (Vb - Va)/(b - a);
+    phi = (sx - Vb)/(sx - b);
 
     for j = 1:sx
         for i = 1:sy
-           if im(j,i) >= a && im(j,i) < b
-                im_out(j,i) = B*(im(j,i) - a) + Va;
-           else 
-               if im(j,i) >= b && im(j,i) < 255
-                    im_out(j,i) = Y*(im(j,i) - b) + Vb;
-               else
-                    im_out(j,i) = im(j,i) * param;
-               end
-           end 
+            if im(j,i) >= 0 && im(j,i) < a
+                im_out(j,i) = alpha * im(j,i);
+            elseif im(j,i) >= a && im(j,i) < b
+                im_out(j,i) = beta * (im(j,i) - a) + Va;
+            elseif im(j,i) >= b && im(j,i) < sx
+                im_out(j,i) = phi * (im(j,i) - b) + Vb;                
+           end
         end
     end
     
-
     figure,imshow(uint8(im)), title('original'),
     figure,imshow(uint8(im_out)), title('saida'),
     figure, histogram(im), title('histograma original'),
