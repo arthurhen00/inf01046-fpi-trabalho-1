@@ -1,4 +1,4 @@
-function filtered_image = tarefa3a(original_image, alpha, window_size)
+function filtered_image = alpha_trimmed_mean_filter(original_image, alpha, window_size)
     original_image = im2double(original_image); % Convert original image to double
 
     % Adiciona o ruido na imagem original
