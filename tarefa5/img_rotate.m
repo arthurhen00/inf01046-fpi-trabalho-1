@@ -1,8 +1,5 @@
-function [] = img_rotate( img , angle )
-%UNTITLED3 Summary of this function goes here
-%   Detailed explanation goes here
-
-close all;
+function [ output ] = img_rotate( img, angle, alg )
+% img_rotate Rotaciona a imagem am angle radianos
 
 % Grid original
 [sx, sy] = size(img);
@@ -35,16 +32,7 @@ sinT = sin(angle);
      end;
  end;
  
-% Imagem sem alteração
-figure,title('original'),imshow(img);
- 
-% Interpolação Nearest Neighbour
-z1=interp2(double(x), double(y), double(img), double(x1), double(y1), 'nearest');
-figure,title('nearest'),imshow(uint8(z1));
-
-% Interpolação Cúbica
-z1=interp2(double(x), double(y), double(img), double(x1), double(y1), 'cubic');
-figure,title('cubic'),imshow(uint8(z1));
+output = interp2(double(x), double(y), double(img), double(x1), double(y1), alg);
 
 end
 
