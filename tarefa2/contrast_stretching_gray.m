@@ -1,15 +1,15 @@
 function contrast_stretching_gray()
 
-    im = imread('moon.tif');
+    im = imread('kids.tif');
     [sx, sy] = size(im);
 
     % Parametros
     % a, b   -> parte alongada
     % Va, Vb -> mapeamento
     Va = 30;
-    Vb = 200;
-    a = 50;
-    b = 150;
+    Vb = 150;
+    a = 0;
+    b = 40;
 
     % Medidas tiradas do slide 123 (cpi-2-slides 2023.pdf)
     % intensidade da reta
@@ -29,9 +29,14 @@ function contrast_stretching_gray()
         end
     end
     
-    figure,imshow(uint8(im)), title('original'),
-    figure,imshow(uint8(im_out)), title('saida'),
-    figure, histogram(im), title('histograma original'),
-    figure, histogram(im_out), title('histograma saida'),
+    subplot(2,3,1),imshow(uint8(im)), title('original'),
+    subplot(2,3,2),imshow(uint8(im_out)), title('stretching'),
+    subplot(2,3,4), histogram(im), title(' original'),
+    subplot(2,3,5), histogram(im_out), title('stretching'),
+
+    eq = equalizacao_histograma_gray(im_out);
+
+    subplot(2,3,3),imshow(uint8(eq)), title('stretching equalizada'),
+    subplot(2,3,6), histogram(eq), title('stretching equalizada'),
 
 end

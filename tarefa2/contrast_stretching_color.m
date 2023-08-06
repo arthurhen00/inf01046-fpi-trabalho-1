@@ -1,18 +1,22 @@
 function contrast_stretching_color()
 
-    im = imread('saturn.png');
+    im = imread('lowlight_1.jpg');
     [sx, sy, sz] = size(im);
 
     hsvImage = rgb2hsv(im);
-    canalV = hsvImage(:,:,3);
+    hsvImageUINT8 = im2uint8(hsvImage);
+
+    canalH = hsvImageUINT8(:,:,1);
+    canalS = hsvImageUINT8(:,:,2);
+    canalV = hsvImageUINT8(:,:,3);
 
     % Parametros
     % a, b   -> parte alongada
     % Va, Vb -> mapeamento
-    Va = 0.12;
-    Vb = 0.8;
-    a = 0.2;
-    b = 0.6;
+    Va = 10;
+    Vb = 200;
+    a = 20;
+    b = 70;
 
     % Medidas tiradas do slide 123 (cpi-2-slides 2023.pdf)
     % intensidade da reta
@@ -32,13 +36,19 @@ function contrast_stretching_color()
         end
     end
     
-    hsvImage(:,:,3) = im_out;
+    finalHSV = cat(3, canalH, canalS, im_out);
+    finalRGB = hsv2rgb(im2double(finalHSV));
+    
+    subplot(2,3,1),imshow(im), title('original'),
+    subplot(2,3,2),imshow(finalRGB), title('strecthing'),
+    subplot(2,3,4), histogram(canalV), title('canal V original'),
+    subplot(2,3,5), histogram(im_out), title('canal V strecthing'),
 
-    outputImage = hsv2rgb(hsvImage);
+    eq = equalizacao_histograma_color(finalRGB);
 
-    figure,imshow(im), title('original'),
-    figure,imshow(outputImage), title('saida'),
-    figure, histogram(canalV), title('histograma canal V original'),
-    figure, histogram(im_out), title('histograma canal V saida'),
+    subplot(2,3,3),imshow(eq), title('stretching equalizado'),
+    t = im2uint8(rgb2hsv(eq));
+    tV = t(:,:,3);
+    subplot(2,3,6), histogram(tV), title('canal V strecthing equalizado'),
 
 end

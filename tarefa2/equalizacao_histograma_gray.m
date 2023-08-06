@@ -1,8 +1,7 @@
 function I_out = equalizacao_histograma_gray(I_in)
 
-    I_in = imread('cameraman.tif');
+    %I_in = imread('moon.tif');
 
-    [M,N] = size(I_in);
     for i = 1:256
         h(i) = sum(sum(I_in == i-1));
     end
@@ -16,8 +15,8 @@ function I_out = equalizacao_histograma_gray(I_in)
         I_out(posicoes) = sum(h(1:i))/s*255;
     end
 
-    figure,imshow(uint8(I_in)), title('original'),
-    figure,imshow(uint8(I_out)), title('saida'),
-    figure, histogram(I_in), title('histograma original'),
-    figure, histogram(I_out), title('histograma saida'),
+    %figure,imshow(uint8(I_in)), title('original'),
+    %figure,imshow(uint8(I_out)), title('saida'),
+    %figure, histogram(I_in), title('histograma original'),
+    %figure, histogram(I_out), title('histograma saida'),
 end
