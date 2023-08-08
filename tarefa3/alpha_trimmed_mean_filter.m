@@ -23,32 +23,33 @@ end
 function result = alphatrimmedmeanfilter_rgb(image, alpha, window_size)
     [M, N, D] = size(image); 
     
+    %Adiciona padding para poder aplicar o filtro em toda imagem
+    window_side = floor(window_size / 2);
+    padded_image = padarray(image, [window_side, window_side], 'symmetric');
+    
     % Calcula o inicio e o final do vetor a ser considerado para o calculo da media
     start =  floor((window_size^2 - window_size) * alpha);
-    window_side = floor(window_size / 2);
     end_val =  ceil(window_size^2-(window_size^2 - window_size) * alpha);
     
-    % Copia a matriz
-    result = image; 
+    result = padded_image; 
     
     % Itera sobre todos elementos exceto os da borda
-    for m = window_side+1:M-window_side
-        for n = window_side+1:N-window_side
+    for m = window_side+1:M+window_side
+        for n = window_side+1:N+window_side
             for i = 1:D
                 % Pega a janela para filtragem
-                window = image(m-window_side:m+window_side, n-window_side:n+window_side, i);
-
+                window = padded_image(m-window_side:m+window_side, n-window_side:n+window_side, i);
                 % Ordena os elementos
                 window_r_sorted = sort(window(:));
-
                 % Remove os cantos do vetor de elementos
                 window_trimmed = window_r_sorted(start+1:end_val);
-
-                % Calcula o valor do pixel (m,n) - média dos valores no vetor
+                % Calcula o valor do pixel (m,n) - mÃ©dia dos valores no vetor
                 result(m, n, i) = mean(window_trimmed);
             end
         end
     end
+    %Remove o padding
+    result = result(window_side+1:end-window_side, window_side+1:end-window_side, :);
 end
 
 function [SNR, PSNR] = calcula_SNR_PSNR(I, I_noisy)
